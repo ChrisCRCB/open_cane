@@ -7,7 +7,7 @@ import cadquery as cq
 class CaneJoint:
     """A joint between two metal tubes."""
 
-    tube_radius: float = 6.9
+    tube_radius: float = 6.8
     """The radius of the metal tube, plus some.
 
     For example, with 13 mm tubes, the radius is `6.5`. Then add a little for wiggle room.
@@ -18,7 +18,7 @@ class CaneJoint:
     wall_thickness: float = 3
     """The thickness of the walls."""
 
-    female_length: float = 40
+    female_join_length: float = 40
     """The length of the female part of the joint."""
 
     string_hole_length: float = 5
@@ -39,7 +39,7 @@ class CaneJoint:
     @property
     def full_length(self) -> float:
         """The full length of the section."""
-        return self.female_length + self.string_hole_length + self.male_join_length
+        return self.female_join_length + self.string_hole_length + self.male_join_length
 
     @property
     def full_radius(self) -> float:
@@ -52,7 +52,7 @@ class CaneJoint:
 
         This value should be cut away from the eventual solid."""
         return cq.Workplane("XY").cylinder(
-            self.female_length, self.tube_radius, centered=(True, True, False)
+            self.female_join_length, self.tube_radius, centered=(True, True, False)
         )
 
     @property
