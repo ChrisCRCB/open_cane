@@ -12,14 +12,14 @@ class CaneJoint:
 
     For example, with 13 mm tubes, the radius is `6.5`. Then add a little for wiggle room.
 
-    This value will form the radius of the female join.
+    This value will form the radius of the wider join.
     """
 
     wall_thickness: float = 3
     """The thickness of the walls."""
 
-    female_join_length: float = 40
-    """The length of the female part of the joint."""
+    wide_join_length: float = 40
+    """The length of the part of the joint where the rod fits."""
 
     string_hole_length: float = 5
     """The length of the part where the string passes through."""
@@ -27,10 +27,10 @@ class CaneJoint:
     string_hole_radius: float = 3
     """The radius of the hole where the string will pass through."""
 
-    male_join_length: float = 40
+    narrow_join_length: float = 40
     """The length of the part which will clamp the tube."""
 
-    male_offset: float = 0.2
+    narrow_join_offset: float = 0.2
     """The offset from `tube_radius` which will inform the radius of the part of the join which grips the tube."""
 
     fillet: float = 1
@@ -39,7 +39,7 @@ class CaneJoint:
     @property
     def full_length(self) -> float:
         """The full length of the section."""
-        return self.female_join_length + self.string_hole_length + self.male_join_length
+        return self.wide_join_length + self.string_hole_length + self.narrow_join_length
 
     @property
     def full_radius(self) -> float:
@@ -47,23 +47,23 @@ class CaneJoint:
         return self.tube_radius + self.wall_thickness
 
     @property
-    def female_section(self) -> cq.Workplane:
-        """The female part of the join.
+    def wide_section(self) -> cq.Workplane:
+        """The wider part of the join.
 
         This value should be cut away from the eventual solid."""
         return cq.Workplane("XY").cylinder(
-            self.female_join_length, self.tube_radius, centered=(True, True, False)
+            self.wide_join_length, self.tube_radius, centered=(True, True, False)
         )
 
     @property
-    def male_section(self) -> cq.Workplane:
-        """The male part of the join.
+    def narrow_section(self) -> cq.Workplane:
+        """The narrower part of the join.
 
         This section should be cut away from the eventual solid, and will be used to grip the inner metal tube.
         """
         return cq.Workplane("XY").cylinder(
-            self.male_join_length,
-            self.tube_radius - self.male_offset,
+            self.narrow_join_length,
+            self.tube_radius - self.narrow_join_offset,
             centered=(True, True, False),
         )
 
@@ -84,14 +84,14 @@ class CaneJoint:
         cylinder = cq.Workplane("XY").cylinder(
             self.full_length, self.full_radius, centered=(True, True, False)
         )
-        female_section = self.female_section
+        wide_cylinder = self.wide_section
         cylinder = cylinder.cut(
-            female_section.translate(
-                (0, 0, self.male_join_length + self.string_hole_length)
+            wide_cylinder.translate(
+                (0, 0, self.narrow_join_length + self.string_hole_length)
             )
         )
         string_hole = self.string_hole
-        cylinder = cylinder.cut(string_hole.translate((0, 0, self.male_join_length)))
-        male_section = self.male_section
-        cylinder = cylinder.cut(male_section)
+        cylinder = cylinder.cut(string_hole.translate((0, 0, self.narrow_join_length)))
+        narrow_cylinder = self.narrow_section
+        cylinder = cylinder.cut(narrow_cylinder)
         return cylinder.edges("<Z or >Z").fillet(self.fillet)
