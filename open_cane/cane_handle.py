@@ -10,10 +10,10 @@ class CaneHandle:
     """The handle of the cane."""
 
     joint_radius: float
-    """The radius of the female joint."""
+    """The radius of the wider opening of the cane joint."""
 
     joint_length: float = 40
-    """The length of the female joint."""
+    """The length of the opening in the joint where the metal tube goes."""
 
     handle_length: float = 190
     """The length of the handle."""
