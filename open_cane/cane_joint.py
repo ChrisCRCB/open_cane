@@ -7,7 +7,7 @@ import cadquery as cq
 class CaneJoint:
     """A joint between two metal tubes."""
 
-    tube_radius: float = 6.7
+    tube_radius: float = 6.6
     """The radius of the metal tube, plus some.
 
     For example, with 13 mm tubes, the radius is `6.5`. Then add a little for wiggle room.
