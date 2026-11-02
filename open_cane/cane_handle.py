@@ -24,7 +24,7 @@ class CaneHandle:
     walls_thickness: float = 3
     """The thickness of the walls."""
 
-    string_hole_radius: float = 5
+    string_hole_radius: float = 2.5
     """The radius for the top hole which the string will pass through."""
 
     braille_text: str | None = "⠠⠕⠏⠢⠀⠠⠉⠁⠝⠑"

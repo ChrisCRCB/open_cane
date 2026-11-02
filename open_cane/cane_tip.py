@@ -8,10 +8,10 @@ class CaneTip:
     """The tip of the cane."""
 
     joint_radius: float
-    """The radius of the female joint."""
+    """The radius of the joint that the tip will fit into."""
 
     joint_length: float = 40
-    """The length of the female joint."""
+    """The length of the joint."""
 
     string_hole_radius: float = 2.5
     """The radius for the top hole which the string will pass through."""
