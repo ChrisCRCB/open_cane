@@ -44,6 +44,7 @@ class CaneHandle:
     def get_shape(self) -> cq.Workplane:
         """Get the shape of the handle."""
         height = self.handle_length + self.joint_length + self.top_thickness
+        print(height)
         cross_section = self.walls_thickness + self.joint_radius
         box_y = cross_section * 2
         cylinder = cq.Workplane("XY").cylinder(
