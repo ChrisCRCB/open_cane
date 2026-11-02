@@ -30,7 +30,7 @@ class CaneHandle:
     braille_text: str | None = "⠠⠕⠏⠢⠀⠠⠉⠁⠝⠑"
     """The braille to render on the handle."""
 
-    grip_fillet: float = 3
+    grip_fillet: float = 2
     """How much to fillet the flat surface of the grip."""
 
     @property
