@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import cadquery as cq
 
-from .braille import BrailleLine
+from open_cane.braille import BrailleLine
 
 
 @dataclass(frozen=True)
@@ -30,6 +30,9 @@ class CaneHandle:
     braille_text: str | None = "⠠⠕⠏⠢⠀⠠⠉⠁⠝⠑"
     """The braille to render on the handle."""
 
+    grip_fillet: float = 3
+    """How much to fillet the flat surface of the grip."""
+
     @property
     def braille(self) -> cq.Compound | None:
         """The braille to add to the handle."""
@@ -46,8 +49,11 @@ class CaneHandle:
         cylinder = cq.Workplane("XY").cylinder(
             height, cross_section, centered=(True, True, False)
         )
-        box = cq.Workplane("XY").box(
-            height, box_y, cross_section, centered=(False, True, False)
+        box = (
+            cq.Workplane("XY")
+            .box(height, box_y, cross_section, centered=(False, True, False))
+            .edges(">Z and |X")
+            .fillet(self.grip_fillet)
         )
         box = box.rotate((0, 0, 0), (0, 1, 0), 270)
         cylinder = cylinder.union(box)
