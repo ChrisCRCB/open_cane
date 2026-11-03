@@ -10,11 +10,9 @@ from .braille import (
 from .cane_handle import CaneHandle
 from .cane_joint import CaneJoint
 from .cane_parts import CaneParts
-from .cane_section import CaneSection
 from .cane_tip import CaneTip
 
 __all__ = [
-    "CaneSection",
     "BrailleDots",
     "BrailleSettings",
     "braille_bits",

@@ -2,30 +2,22 @@ from dataclasses import dataclass
 
 import cadquery as cq
 
-from open_cane.braille import BrailleLine
+from .braille import BrailleLine
+from .cane_joint import CaneJoint
 
 
 @dataclass(frozen=True)
 class CaneHandle:
     """The handle of the cane."""
 
-    joint_radius: float
-    """The radius of the wider opening of the cane joint."""
-
-    joint_length: float = 40
-    """The length of the opening in the joint where the metal tube goes."""
+    joint: CaneJoint
+    """The joint whose dimensions will be used."""
 
     handle_length: float = 190
     """The length of the handle."""
 
     top_thickness: float = 20
     """How much material will make up the top of the handle."""
-
-    walls_thickness: float = 3
-    """The thickness of the walls."""
-
-    string_hole_radius: float = 2.5
-    """The radius for the top hole which the string will pass through."""
 
     braille_text: str | None = "⠠⠕⠏⠢⠀⠠⠉⠁⠝⠑"
     """The braille to render on the handle."""
@@ -43,9 +35,9 @@ class CaneHandle:
 
     def get_shape(self) -> cq.Workplane:
         """Get the shape of the handle."""
-        height = self.handle_length + self.joint_length + self.top_thickness
-        print(height)
-        cross_section = self.walls_thickness + self.joint_radius
+        join_length = self.joint.wide_join_length
+        height = self.handle_length + join_length + self.top_thickness
+        cross_section = self.joint.wall_thickness + self.joint.tube_radius
         box_y = cross_section * 2
         cylinder = cq.Workplane("XY").cylinder(
             height, cross_section, centered=(True, True, False)
@@ -82,14 +74,14 @@ class CaneHandle:
         middle = (
             cq.Workplane("XY")
             .cylinder(
-                self.joint_length,
-                self.joint_radius,
+                join_length,
+                self.joint.tube_radius,
                 centered=(True, True, False),
             )
             .union(
                 cq.Workplane("XY").cylinder(
-                    height, self.string_hole_radius, centered=(True, True, False)
+                    height, self.joint.wide_join_length, centered=(True, True, False)
                 )
             )
         )
-        return cylinder.cut(middle)
+        return cylinder.cut(middle).edges("<Z").fillet(self.joint.fillet)

@@ -2,22 +2,21 @@ from dataclasses import dataclass
 
 import cadquery as cq
 
+from .cane_joint import CaneJoint
+
 
 @dataclass(frozen=True)
 class CaneTip:
     """The tip of the cane."""
 
-    joint_radius: float
-    """The radius of the joint that the tip will fit into."""
-
-    joint_length: float = 40
-    """The length of the joint."""
+    join: CaneJoint
+    """The joint whose dimensions will be used."""
 
     string_hole_radius: float = 2.5
     """The radius for the top hole which the string will pass through."""
 
     stem_difference: float = 2
-    """How much to subtract from `joint_radius` when making the stem."""
+    """How much to subtract from the radius of the join when making the stem."""
 
     ball_height: float = 25
     """The height of the ball part."""
@@ -41,23 +40,24 @@ class CaneTip:
     @property
     def stem(self) -> cq.Workplane:
         """The stem of the tip."""
-        half = self.joint_length / 2
+        half = self.join.wide_join_length / 2
+        tube_radius = self.join.tube_radius
         top = (
             cq.Workplane("XY")
             .cylinder(
                 half,
-                self.joint_radius - self.stem_difference,
+                tube_radius - self.stem_difference,
                 centered=(True, True, False),
             )
             .cut(
                 cq.Workplane("XY")
-                .cylinder(self.joint_radius * 2, self.string_hole_radius)
+                .cylinder(tube_radius * 2, self.string_hole_radius)
                 .rotate((0, 0, 0), (0, 1, 0), 90)
                 .translate((0, 0, half / 2))
             )
         ).translate((0, 0, half))
         bottom = cq.Workplane("XY").cylinder(
-            half, self.joint_radius, centered=(True, True, False)
+            half, tube_radius, centered=(True, True, False)
         )
         return bottom.union(top)
 
