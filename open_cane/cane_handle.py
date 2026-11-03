@@ -80,7 +80,7 @@ class CaneHandle:
             )
             .union(
                 cq.Workplane("XY").cylinder(
-                    height, self.joint.wide_join_length, centered=(True, True, False)
+                    height, self.joint.string_hole_radius, centered=(True, True, False)
                 )
             )
         )
