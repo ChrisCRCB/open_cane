@@ -84,4 +84,5 @@ class CaneHandle:
                 )
             )
         )
-        return cylinder.cut(middle).edges("<Z").fillet(self.joint.fillet)
+        cylinder = cylinder.cut(middle)
+        return cylinder.edges("<Z").fillet(self.joint.fillet)
