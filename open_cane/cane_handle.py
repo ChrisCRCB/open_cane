@@ -13,7 +13,7 @@ class CaneHandle:
     joint: CaneJoint
     """The joint whose dimensions will be used."""
 
-    handle_length: float = 190
+    handle_length: float = 250
     """The length of the handle."""
 
     top_thickness: float = 20
@@ -36,15 +36,16 @@ class CaneHandle:
     def get_shape(self) -> cq.Workplane:
         """Get the shape of the handle."""
         join_length = self.joint.wide_join_length
-        height = self.handle_length + join_length + self.top_thickness
         cross_section = self.joint.wall_thickness + self.joint.tube_radius
         box_y = cross_section * 2
         cylinder = cq.Workplane("XY").cylinder(
-            height, cross_section, centered=(True, True, False)
+            self.handle_length, cross_section, centered=(True, True, False)
         )
         box = (
             cq.Workplane("XY")
-            .box(height, box_y, cross_section, centered=(False, True, False))
+            .box(
+                self.handle_length, box_y, cross_section, centered=(False, True, False)
+            )
             .edges(">Z and |X")
             .fillet(self.grip_fillet)
         )
@@ -55,9 +56,9 @@ class CaneHandle:
         braille = self.braille
         if braille is not None:
             bounds = braille.BoundingBox()
-            if bounds.xlen > height or bounds.ylen > box_y:
+            if bounds.xlen > self.handle_length or bounds.ylen > box_y:
                 raise RuntimeError(
-                    f"Braille text ({bounds.xlen} x {bounds.ylen}) does not fit on the handle ({height} x {box_y})."
+                    f"Braille text ({bounds.xlen} x {bounds.ylen}) does not fit on the handle ({self.handle_length} x {box_y})."
                 )
             center_x = (bounds.xmin + bounds.xmax) / 2
             center_y = (bounds.ymin + bounds.ymax) / 2
@@ -67,7 +68,7 @@ class CaneHandle:
                 (
                     -cross_section - rotated_bounds.xmax,
                     -center_y,
-                    height / 2 - center_x,
+                    self.handle_length / 2 - center_x,
                 )
             )
             cylinder = cylinder.union(braille)
@@ -80,7 +81,9 @@ class CaneHandle:
             )
             .union(
                 cq.Workplane("XY").cylinder(
-                    height, self.joint.string_hole_radius, centered=(True, True, False)
+                    self.handle_length,
+                    self.joint.string_hole_radius,
+                    centered=(True, True, False),
                 )
             )
         )
