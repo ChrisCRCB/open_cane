@@ -24,7 +24,7 @@ class CaneJoint:
     string_hole_length: float = 5
     """The length of the part where the string passes through."""
 
-    string_hole_radius: float = 2.9
+    string_hole_radius: float = 3
     """The radius of the hole where the string will pass through."""
 
     narrow_join_length: float = 40
