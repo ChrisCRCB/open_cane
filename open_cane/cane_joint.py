@@ -56,6 +56,11 @@ class CaneJoint:
         )
 
     @property
+    def narrow_join_radius(self) -> float:
+        """The radius of the narrow joint."""
+        return self.tube_radius - self.narrow_join_offset
+
+    @property
     def narrow_section(self) -> cq.Workplane:
         """The narrower part of the join.
 
@@ -63,7 +68,7 @@ class CaneJoint:
         """
         return cq.Workplane("XY").cylinder(
             self.narrow_join_length,
-            self.tube_radius - self.narrow_join_offset,
+            self.narrow_join_radius,
             centered=(True, True, False),
         )
 

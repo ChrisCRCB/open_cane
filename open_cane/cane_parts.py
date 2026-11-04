@@ -14,7 +14,7 @@ class CaneParts:
     joint: CaneJoint
     """The joint to base all dimensions around."""
 
-    joint_count: int = 4
+    joint_count: int = 5
     """The number of joints to print."""
 
     def get_shape(self) -> cq.Workplane:

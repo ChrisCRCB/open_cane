@@ -35,7 +35,6 @@ class CaneHandle:
 
     def get_shape(self) -> cq.Workplane:
         """Get the shape of the handle."""
-        join_length = self.joint.wide_join_length
         cross_section = self.joint.wall_thickness + self.joint.tube_radius
         box_y = cross_section * 2
         cylinder = cq.Workplane("XY").cylinder(
@@ -72,19 +71,22 @@ class CaneHandle:
                 )
             )
             cylinder = cylinder.union(braille)
+        tube_grip_length = self.handle_length - self.top_thickness
         middle = (
             cq.Workplane("XY")
             .cylinder(
-                join_length,
-                self.joint.tube_radius,
+                tube_grip_length,
+                self.joint.narrow_join_radius,
                 centered=(True, True, False),
             )
             .union(
-                cq.Workplane("XY").cylinder(
-                    self.handle_length,
+                cq.Workplane("XY")
+                .cylinder(
+                    self.top_thickness,
                     self.joint.string_hole_radius,
                     centered=(True, True, False),
                 )
+                .translate((0, 0, tube_grip_length))
             )
         )
         cylinder = cylinder.cut(middle)
