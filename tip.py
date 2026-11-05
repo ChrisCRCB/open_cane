@@ -4,6 +4,6 @@ from open_cane import CaneJoint, CaneTip
 
 if __name__ == "__main__":
     joint = CaneJoint()
-    tip = CaneTip(joint.tube_radius)
+    tip = CaneTip(joint)
     model = tip.get_shape()
     cq.exporters.export(model, "tip.stl")
