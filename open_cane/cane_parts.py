@@ -17,6 +17,9 @@ class CaneParts:
     joint_count: int = 5
     """The number of joints to print."""
 
+    joint_distance: float = 3
+    """How much space to put between joints."""
+
     def get_shape(self) -> cq.Workplane:
         """Get the shape."""
         joint = self.joint.get_shape()
@@ -25,7 +28,7 @@ class CaneParts:
         handle = CaneHandle(joint=self.joint)
         handle_shape = handle.get_shape()
         model = joint
-        modifier = (self.joint.full_radius * 2) + 3
+        modifier = (self.joint.full_radius * 2) + self.joint_distance
         for n in range(self.joint_count - 1):
             x = (n + 1) * modifier
             coordinates = (x, 0, 0)
